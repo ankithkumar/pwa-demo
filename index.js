@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navigator.serviceWorker.addEventListener('controllerchange', function () {
             window.location.reload();
         });
+    } else {
+        console.log('service worker not supported!!');
     }
-
 });

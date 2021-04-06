@@ -5,6 +5,16 @@ const filesToCache = [
     'index.html',
     'index.css',
     'index.js',
+    'sw.js',
+    'assets/icons/icon-72x72.png',
+    'assets/icons/icon-96x96.png',
+    'assets/icons/icon-128x128.png',
+    'assets/icons/icon-144x144.png',
+    'assets/icons/icon-152x152.png',
+    'assets/icons/icon-192x192.png',
+    'assets/icons/icon-384x384.png',
+    'assets/icons/icon-512x512.png',
+    'manifest.json',
     'offline.html',
     "scripts/load-images.js",
     "scripts/web-sdk-int.js"
@@ -47,11 +57,13 @@ self.addEventListener('fetch', event => {
                 // due to a network error.
                 // If fetch() returns a valid HTTP response with a response code in
                 // the 4xx or 5xx range, the catch() will NOT be called.
+
                 // if (relativeURl === '') {
                 //     const cache = await caches.open(cacheName);
                 //     const cachedResponse = await cache.match(INIT_PAGE);
                 //     return cachedResponse;
                 // } else {
+
                 console.log('Fetch failed; returning offline page instead.', error);
                 const cache = await caches.open(cacheName);
                 const cachedResponse = await cache.match(OFFLINE_URL);
@@ -72,14 +84,17 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', (event) => {
-    event.waitUntil(caches.keys().then((keyList) => {
-        Promise.all(keyList.map((key) => {
-            if (key === cacheName) {
-                return;
-            }
-            caches.delete(key);
-        }))
-    })());
+    let keys = caches.keys();
+    if (keys.then && typeof keys.then === "function") {
+        event.waitUntil(keys.then((keyList) => {
+            Promise.all(keyList.map((key) => {
+                if (key === cacheName) {
+                    return;
+                }
+                caches.delete(key);
+            }))
+        })());
+    }
 });
 
 self.addEventListener('message', function (e) {
