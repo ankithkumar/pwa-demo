@@ -1,0 +1,12 @@
+.image-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.demo-img {
+    width: 30%;
+    height: 400px;
+}
