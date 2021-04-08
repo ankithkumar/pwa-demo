@@ -5,81 +5,13 @@ if (!window['fetch']) {
     window['fetch'] = fetch;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-            .register('sw.js')
-            .then(function (registration) {
-                console.info('ServiceWorker registration successful with scope:', registration.scope);
-
-                // if there's no controller, this page wasn't loaded
-                // via a service worker, so they're looking at the latest version.
-                // In that case, exit early
-                if (!navigator.serviceWorker.controller) return;
-
-                // if there's an updated worker already waiting, update
-                if (registration.waiting) {
-                    console.info('show toast and upon click update...');
-                    showUpdateBanner(() => {
-                        registration.waiting.postMessage({
-                            updateSw: true
-                        });
-                    });
-                    return;
-                }
-
-                // if there's an updated worker installing, track its
-                // progress. If it becomes "installed", update
-                if (registration.installing) {
-                    registration.addEventListener('statechange', function () {
-                        if (registration.installing.state == 'installed') {
-                            console.info('show toast and upon click update...');
-                            showUpdateBanner(() => {
-                                registration.installing.postMessage({
-                                    updateSw: true
-                                });
-                            })
-                            return;
-                        }
-                    });
-                }
-
-                // otherwise, listen for new installing workers arriving.
-                // If one arrives, track its progress.
-                // If it becomes "installed", update
-                registration.addEventListener('updatefound', function () {
-                    let newServiceWorker = registration.installing;
-
-                    newServiceWorker.addEventListener('statechange', function () {
-                        if (newServiceWorker.state == 'installed') {
-                            console.info('show toast and upon click update...');
-                            showUpdateBanner(() => {
-                                newServiceWorker.postMessage({
-                                    updateSw: true
-                                });
-                            })
-                        }
-                    });
-                });
-            })
-            .catch(function (error) {
-                console.info('ServiceWorker registration failed:', error);
-            });
-
-
-        navigator.serviceWorker.addEventListener('controllerchange', function () {
-            window.location.reload();
-        });
-    } else {
-        console.log('service worker not supported!!');
-    }
-});
-
 showUpdateBanner = cb => {
+    console.log('showing button');
     let updateContainer = document.querySelector('.update');
     let updateBtn = document.querySelector('.update-btn');
     updateBtn.remove();
-    let btn = document.createElement('btn');
+    let btn = document.createElement('button');
+    btn.textContent = 'update app';
     btn.classList.add('update-btn');
     if (!updateContainer.classList.contains('show')) {
         updateContainer.classList.remove('hide');
@@ -93,4 +25,78 @@ showUpdateBanner = cb => {
             cb();
         }
     });
+    updateContainer.appendChild(btn);
 }
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('sw.js')
+        .then(function (reg) {
+            console.info('ServiceWorker registration successful with scope:', reg.scope);
+
+            if (!navigator.serviceWorker.controller) {
+                return;
+            }
+
+            if (reg.waiting) {
+                console.log('new service worker waiting');
+                updateReady(reg.waiting);
+                return;
+            }
+
+            if (reg.installing) {
+                console.log('new service worker waiting');
+                trackInstalling(reg.installing);
+                return;
+            }
+
+            reg.addEventListener('updatefound', function () {
+                console.log('new service worker update found');
+                trackInstalling(reg.installing);
+            });
+        })
+        .catch(error => {
+            console.error('sw registration failed!', error);
+        });
+
+    // Ensure refresh is only called once.
+    // This works around a bug in "force update on reload".
+    var refreshing;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+        console.log('controller change!', refreshing);
+        if (refreshing) return;
+        window.location.reload();
+        refreshing = true;
+    });
+} else {
+    console.error('sw not supported', error);
+}
+
+function unregisterServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations()
+            .then(registration => {
+                for (let i = 0; i < registration.length; i++) {
+                    registration[i].unregister();
+                }
+                setTimeout(() => window.location.reload());
+            })
+    }
+}
+
+function updateReady(worker) {
+    showUpdateBanner(() => {
+        unregisterServiceWorker();
+        // worker.postMessage({
+        //     action: 'skipWaiting'
+        // });
+    })
+}
+
+function trackInstalling(worker) {
+    worker.addEventListener('statechange', function () {
+        if (worker.state == 'installed') {
+            updateReady(worker);
+        }
+    });
+};

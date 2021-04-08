@@ -1,3 +1,7 @@
+* {
+    font-family: 'Open Sans';
+}
+
 .image-container {
     display: flex;
     flex-direction: row;
@@ -11,20 +15,36 @@
 
 .update {
     position: fixed;
-    bottom: 0;
+    bottom: 16px;
+    border-radius: 8px;
     height: auto;
-    width: 100vw;
+    width: 500px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    height: auto;
+    background-color: blanchedalmond;
+    border: 1px solid #fefefe;
 }
 
-.update update-text {
-    width: 80vw;
+.update.hide {
+    display: none;
+}
+
+.update.show {
+    display: flex;
+}
+
+.update-text {
+    margin-right: 24px;
 }
 
 .update-btn {
     border: 1px solid #dffdff;
     background-color: beige;
     color: blue;
+    padding: 5px;
+    cursor: pointer;
 }

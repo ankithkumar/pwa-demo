@@ -1,4 +1,6 @@
-const cacheName = "demo-app-v1"
+const staticCache = "demo-app-static-v7";
+const dynamicCache = "demo-app-dynamic-v7";
+
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
 const filesToCache = [
@@ -14,98 +16,71 @@ const filesToCache = [
     'assets/icons/icon-192x192.png',
     'assets/icons/icon-384x384.png',
     'assets/icons/icon-512x512.png',
+    'https://fonts.googleapis.com/css?family=Karla:400,700|Open+Sans:300,400,600,700|Roboto',
+    'https://fonts.googleapis.com/icon?family=Material+Icons',
     'manifest.json',
     'offline.html',
-    "scripts/fetch.js",
-    "scripts/promise.js",
+    "scripts/material.min.js",
     "scripts/load-images.js",
     "scripts/web-sdk-int.js"
 ];
 
-const dynamicCache = [
+const dynamicFileToCache = [
     "images.unsplash.com"
 ]
 
 self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
     event.waitUntil(
-        caches.open(cacheName)
-        .then(cache => {
-            return cache.addAll(filesToCache);
-        })
+        caches.open(staticCache)
+        .then(cache => cache.addAll(filesToCache))
     );
 });
 
 self.addEventListener('fetch', event => {
-    if (event.request.mode === 'navigate') {
-        event.respondWith((async () => {
-            try {
-                // First, try to use the navigation preload response if it's supported.
-                const preloadResponse = await event.preloadResponse;
-                if (preloadResponse) {
-                    return preloadResponse;
-                }
-
-                const networkResponse = await fetch(event.request);
-                if (networkResponse.status > 400) {
-                    throw 'failed';
-                }
-                return networkResponse;
-            } catch (error) {
-                // let relativeURl = getRelativeUrl(event.request.url);
-                // catch is only triggered if an exception is thrown, which is likely
-                // due to a network error.
-                // If fetch() returns a valid HTTP response with a response code in
-                // the 4xx or 5xx range, the catch() will NOT be called.
-
-                // if (relativeURl === '') {
-                //     const cache = await caches.open(cacheName);
-                //     const cachedResponse = await cache.match(INIT_PAGE);
-                //     return cachedResponse;
-                // } else {
-
-                console.log('Fetch failed; returning offline page instead.', error);
-                const cache = await caches.open(cacheName);
-                const cachedResponse = await cache.match(OFFLINE_URL);
-                return cachedResponse;
-                // }
-            }
-        })());
-    } else {
-        event.respondWith(async function () {
-            const cachedResponse = await caches.match(event.request);
-            if (cachedResponse) {
-                console.log('found response!');
-                return cachedResponse;
-            }
-            return fetch(event.request).then(updateCache(event.request));
-        }());
-    }
+    event.respondWith(async function () {
+        const cachedResponse = await caches.match(event.request);
+        if (cachedResponse) {
+            console.log('found response in cache!');
+            return cachedResponse;
+        }
+        return fetch(event.request)
+            .then(res => updateCache(event.request, res))
+            .catch(err => {
+                return caches.open(staticCache)
+                    .then(cache => {
+                        if (event.request.headers.get('accept').includes('text/html')) {
+                            return cache.match(OFFLINE_URL)
+                        }
+                    })
+            })
+    }());
 });
 
 self.addEventListener('activate', (event) => {
-    let keys = caches.keys();
-    if (keys.then && typeof keys.then === "function") {
-        event.waitUntil(keys.then((keyList) => {
-            Promise.all(keyList.map((key) => {
-                if (key === cacheName) {
-                    return;
+    console.log('service worker activated');
+    event.waitUntil(
+        caches.keys()
+        .then(keyList => {
+            return Promise.all(keyList.map(key => {
+                if (key !== staticCache && key !== dynamicCache) {
+                    console.log('deleting cache ', key);
+                    return caches.delete(key);
                 }
-                caches.delete(key);
             }))
-        })());
-    }
+        }));
+    self.clients.claim();
 });
 
 self.addEventListener('message', function (e) {
     console.log('message ', e.data);
-    if (e.data.updateSw) {
+    if (e.data.action === 'skipWaiting') {
         self.skipWaiting();
     }
 });
 
-function updateCache(request) {
-    let concatArr = [...filesToCache, ...dynamicCache];
+function updateCache(request, response) {
+    let concatArr = dynamicFileToCache;
     let flag = false;
     for (let i = 0; i < concatArr.length; i++) {
         if (request.url.indexOf(concatArr[i]) !== -1) {
@@ -114,16 +89,13 @@ function updateCache(request) {
         }
     }
     if (!flag) {
-        return;
+        return response;
     }
-    return caches.open(cacheName).then(cache => {
-        return fetch(request).then(response => {
-            const resClone = response.clone();
-            if (response.status < 400)
-                return cache.put(request, resClone);
+    return caches.open(dynamicCache)
+        .then(cache => {
+            cache.put(request, response.clone());
             return response;
         });
-    });
 }
 
 
