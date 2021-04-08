@@ -1,5 +1,5 @@
-const staticCache = "demo-app-static-v5";
-const dynamicCache = "demo-app-dynamic-v5";
+const staticCache = "demo-app-static-v2";
+const dynamicCache = "demo-app-dynamic-v2";
 
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
@@ -18,10 +18,13 @@ const staticFilesToCache = [
     'assets/icons/icon-512x512.png',
     'https://fonts.googleapis.com/css?family=Karla:400,700|Open+Sans:300,400,600,700|Roboto',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
+    'https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css',
+    'https://code.jquery.com/jquery-3.2.1.slim.min.js',
+    'https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js',
+    'https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js',
+    'https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js',
     'manifest.json',
     'offline.html',
-    "scripts/material.min.js",
-    "scripts/load-images.js",
     "scripts/web-sdk-int.js"
 ];
 

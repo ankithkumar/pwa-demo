@@ -5,6 +5,10 @@ if (!window['fetch']) {
     window['fetch'] = fetch;
 }
 
+$(document).ready(function () {
+    $('body').bootstrapMaterialDesign()
+});
+
 showUpdateBanner = cb => {
     console.log('showing button');
     let updateContainer = document.querySelector('.update');
@@ -13,6 +17,8 @@ showUpdateBanner = cb => {
     let btn = document.createElement('button');
     btn.textContent = 'update app';
     btn.classList.add('update-btn');
+    btn.classList.add('btn');
+    btn.classList.add('btn-primary');
     if (!updateContainer.classList.contains('show')) {
         updateContainer.classList.remove('hide');
         updateContainer.classList.add('show');
