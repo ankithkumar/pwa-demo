@@ -1,9 +1,10 @@
-const staticCache = "demo-app-static-v4";
-const dynamicCache = "demo-app-dynamic-v4";
+const staticCache = "demo-app-static-v5";
+const dynamicCache = "demo-app-dynamic-v5";
 
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
 const staticFilesToCache = [
+    '/',
     'index.html',
     'index.css',
     'index.js',
