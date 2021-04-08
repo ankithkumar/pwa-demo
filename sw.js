@@ -1,5 +1,5 @@
-const staticCache = "demo-app-static-v8";
-const dynamicCache = "demo-app-dynamic-v8";
+const staticCache = "demo-app-static-v10";
+const dynamicCache = "demo-app-dynamic-v10";
 
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
