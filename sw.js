@@ -1,9 +1,9 @@
-const staticCache = "demo-app-static-v1";
-const dynamicCache = "demo-app-dynamic-v1";
+const staticCache = "demo-app-static-v10";
+const dynamicCache = "demo-app-dynamic-v10";
 
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
-const filesToCache = [
+const staticFilesToCache = [
     '/',
     'index.html',
     'index.css',
@@ -33,7 +33,7 @@ self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
     event.waitUntil(
         caches.open(staticCache)
-        .then(cache => cache.addAll(filesToCache))
+        .then(cache => cache.addAll(staticFilesToCache))
     );
 });
 
