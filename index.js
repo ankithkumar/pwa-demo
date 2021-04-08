@@ -1,3 +1,10 @@
+if (!window['Promise']) {
+    window['Promise'] = Promise;
+}
+if (!window['fetch']) {
+    window['fetch'] = fetch;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -13,8 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // if there's an updated worker already waiting, update
                 if (registration.waiting) {
                     console.info('show toast and upon click update...');
-                    registration.waiting.postMessage({
-                        updateSw: true
+                    showUpdateBanner(() => {
+                        registration.waiting.postMessage({
+                            updateSw: true
+                        });
                     });
                     return;
                 }
@@ -25,9 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     registration.addEventListener('statechange', function () {
                         if (registration.installing.state == 'installed') {
                             console.info('show toast and upon click update...');
-                            registration.installing.postMessage({
-                                updateSw: true
-                            });
+                            showUpdateBanner(() => {
+                                registration.installing.postMessage({
+                                    updateSw: true
+                                });
+                            })
                             return;
                         }
                     });
@@ -42,9 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     newServiceWorker.addEventListener('statechange', function () {
                         if (newServiceWorker.state == 'installed') {
                             console.info('show toast and upon click update...');
-                            newServiceWorker.postMessage({
-                                updateSw: true
-                            });
+                            showUpdateBanner(() => {
+                                newServiceWorker.postMessage({
+                                    updateSw: true
+                                });
+                            })
                         }
                     });
                 });
@@ -61,3 +74,23 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('service worker not supported!!');
     }
 });
+
+showUpdateBanner = cb => {
+    let updateContainer = document.querySelector('.update');
+    let updateBtn = document.querySelector('.update-btn');
+    updateBtn.remove();
+    let btn = document.createElement('btn');
+    btn.classList.add('update-btn');
+    if (!updateContainer.classList.contains('show')) {
+        updateContainer.classList.remove('hide');
+        updateContainer.classList.add('show');
+    }
+    btn.addEventListener('click', () => {
+        console.log('update clicked');
+        updateContainer.classList.remove('show');
+        updateContainer.classList.add('hide');
+        if (cb && typeof cb == 'function') {
+            cb();
+        }
+    });
+}

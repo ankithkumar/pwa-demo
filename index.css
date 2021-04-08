@@ -8,3 +8,23 @@
     width: 30%;
     height: auto;
 }
+
+.update {
+    position: fixed;
+    bottom: 0;
+    height: auto;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.update update-text {
+    width: 80vw;
+}
+
+.update-btn {
+    border: 1px solid #dffdff;
+    background-color: beige;
+    color: blue;
+}

@@ -7,18 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json" />
     <!-- ios support -->
-    <link rel="apple-touch-icon" href="assets/icons/icon-72x72.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-96x96.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-128x128.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-144x144.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-152x152.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-384x384.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-512x512.png" />
-    <meta name="apple-mobile-web-app-status-bar" content="#db4938" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-72x72.png" sizes="72*72" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-96x96.png" sizes="96*96" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-128x128.png" sizes="128*128" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-144x144.png" sizes="144*144" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-152x152.png" sizes="152*152" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" sizes="192*192" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-384x384.png" sizes="384*384" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-512x512.png" sizes="512*512" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#db4938" />
+    <meta name="apple-mobile-web-app-status-bar-title" content="pwa-demo-app" />
+    <!--edge -->
+    <meta name="msapplication-TileImage" content="assets/icons/icon-72x72.png" />
+    <meta name="msapplication-TileColor" content="#db4938" />
+
     <meta name="theme-color" content="#db4938" />
     <link rel="stylesheet" href="index.css" />
-    <script src="index.js"></script>
     <link rel="stylesheet" href="https://cdn-sdk.hansel.io/web/8.3.6/hansel.min.css">
     <script src="https://cdn-sdk.hansel.io/web/8.3.6/hansel.min.js"></script>
     <title>online page</title>
@@ -27,6 +32,14 @@
 <body>
     This is a pwa app
     <div class="image-container"></div>
+    <div class="update">
+        <span class="update-text">There is an update for you</span>
+        <button class="update-btn">update</button>
+    </div>
+    <script defer src="scripts/material.min.js"></script>
+    <script src="scripts/fetch.js"></script>
+    <script src="scripts/promise.js"></script>
+    <script src="index.js"></script>
     <script src="scripts/load-images.js"></script>
     <script src="scripts/web-sdk-int.js"></script>
 </body>

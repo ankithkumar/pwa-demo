@@ -2,10 +2,10 @@ const cacheName = "demo-app-v1"
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
 const filesToCache = [
+    '/',
     'index.html',
     'index.css',
     'index.js',
-    'sw.js',
     'assets/icons/icon-72x72.png',
     'assets/icons/icon-96x96.png',
     'assets/icons/icon-128x128.png',
@@ -16,14 +16,14 @@ const filesToCache = [
     'assets/icons/icon-512x512.png',
     'manifest.json',
     'offline.html',
+    "scripts/fetch.js",
+    "scripts/promise.js",
     "scripts/load-images.js",
     "scripts/web-sdk-int.js"
 ];
 
 const dynamicCache = [
-    "images.unsplash.com",
-    "hansel.min.css",
-    "hansel.min.js"
+    "images.unsplash.com"
 ]
 
 self.addEventListener('install', event => {
@@ -98,6 +98,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('message', function (e) {
+    console.log('message ', e.data);
     if (e.data.updateSw) {
         self.skipWaiting();
     }
