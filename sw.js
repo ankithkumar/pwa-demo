@@ -4,7 +4,6 @@ const dynamicCache = "demo-app-dynamic-v2";
 const OFFLINE_URL = 'offline.html';
 const INIT_PAGE = 'index.html';
 const staticFilesToCache = [
-    '/',
     'index.html',
     'index.css',
     'index.js',
