@@ -36,7 +36,7 @@ showUpdateBanner = cb => {
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-        .register('sw.js')
+        .register('service-worker.js')
         .then(function (reg) {
             console.info('ServiceWorker registration successful with scope:', reg.scope);
 

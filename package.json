@@ -1,0 +1,24 @@
+{
+  "name": "demo-pwa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate": "workbox generate:sw",
+    "inject-sw": "workbox inject:manifest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankithkumar/pwa-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ankithkumar/pwa-demo/issues"
+  },
+  "homepage": "https://github.com/ankithkumar/pwa-demo#readme",
+  "devDependencies": {
+    "workbox-cli": "^2.1.3"
+  }
+}
